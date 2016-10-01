@@ -14,12 +14,6 @@ import requests
 
 app = Flask(__name__)
 
-engine = create_engine('sqlite:///restaurantmenu.db')
-Base.metadata.bind = engine
-
-DBSession = sessionmaker(bind=engine)
-session = DBSession()
-
 
 ######## login_session #########
 
@@ -262,6 +256,26 @@ def gdisconnect():
         return response
 
 
+# JSON APIs to view Restaurant Information
+@app.route('/restaurant/<int:restaurant_id>/menu/JSON')
+def restaurantMenuJSON(restaurant_id):
+    restaurant = session.query(Restaurant).filter_by(id=restaurant_id).one()
+    items = session.query(MenuItem).filter_by(
+        restaurant_id=restaurant_id).all()
+    return jsonify(MenuItems=[i.serialize for i in items])
+
+
+@app.route('/restaurant/<int:restaurant_id>/menu/<int:menu_id>/JSON')
+def menuItemJSON(restaurant_id, menu_id):
+    Menu_Item = session.query(MenuItem).filter_by(id=menu_id).one()
+    return jsonify(Menu_Item=Menu_Item.serialize)
+
+
+@app.route('/restaurant/JSON')
+def restaurantsJSON():
+    restaurants = session.query(Restaurant).all()
+    return jsonify(restaurants=[r.serialize for r in restaurants])
+
 ######## end of login_session ########
 
 # Show all restaurants
@@ -272,7 +286,8 @@ def showRestaurants():
     if 'username' not in login_session:
         return render_template('publicrestaurants.html', restaurants=restaurants)
     else:
-        return render_template('restaurants.html', restaurants=restaurants)
+        user = session.query(User).filter_by(name = login_session['username']).one()
+        return render_template('restaurants.html', restaurants=restaurants,user = user)
 
 # New Restaurant
 @app.route('/restaurants/new/', methods=['GET', 'POST'])
@@ -287,7 +302,8 @@ def newRestaurant():
         session.commit()
         return redirect(url_for('showRestaurants'))
     else:
-        return render_template('newRestaurant.html')
+        user = session.query(User).filter_by(name = login_session['username']).one()
+        return render_template('newRestaurant.html', user = user)
 
 
 # Edit Restaurant
@@ -305,7 +321,8 @@ def editRestaurant(restaurant_id):
             flash('Restaurant Successfully Edited %s' % editedRestaurant.name)
             return redirect(url_for('showRestaurants'))
     else:
-        return render_template('editRestaurant.html', restaurant=editedRestaurant)
+        user = session.query(User).filter_by(name = login_session['username']).one()
+        return render_template('editRestaurant.html', restaurant=editedRestaurant,user=user)
 # Delete a restaurant
 @app.route('/restaurant/<int:restaurant_id>/delete/', methods=['GET', 'POST'])
 def deleteRestaurant(restaurant_id):
@@ -321,7 +338,8 @@ def deleteRestaurant(restaurant_id):
         session.commit()
         return redirect(url_for('showRestaurants', restaurant_id=restaurant_id))
     else:
-        return render_template('deleteRestaurant.html', restaurant=restaurantToDelete)
+        user = session.query(User).filter_by(name = login_session['username']).one()
+        return render_template('deleteRestaurant.html', restaurant=restaurantToDelete,user = user)
 
 # show Restaurant menus
 @app.route('/restaurant/<int:restaurant_id>/')
@@ -329,13 +347,12 @@ def deleteRestaurant(restaurant_id):
 def showMenu(restaurant_id):
     restaurant = session.query(Restaurant).filter_by(id=restaurant_id).one()
     creator = getUserInfo(restaurant.user_id)
-    items = session.query(MenuItem).filter_by(
-        restaurant_id=restaurant_id).all()
+    items = session.query(MenuItem).filter_by(restaurant_id=restaurant_id).all()
     if 'username' not in login_session or creator.id != login_session['user_id']:
         return render_template('publicmenu.html', items=items, restaurant=restaurant, creator=creator)
     else:
-        return render_template('menu.html', items=items, restaurant=restaurant, #creator=creator
-                                                            )
+        user = session.query(User).filter_by(name = login_session['username']).one()
+        return render_template('menu.html', items=items, restaurant=restaurant, creator=creator,user = user)
 
 # New MenuItem
 @app.route('/restaurant/<int:restaurant_id>/menu/new/', methods=['GET', 'POST'])
@@ -353,7 +370,8 @@ def newMenuItem(restaurant_id):
             flash('New Menu %s Item Successfully Created' % (newItem.name))
             return redirect(url_for('showMenu', restaurant_id=restaurant_id))
     else:
-        return render_template('newmenuitem.html', restaurant_id=restaurant_id)
+        user = session.query(User).filter_by(name = login_session['username']).one()
+        return render_template('newmenuitem.html', restaurant_id=restaurant_id,user = user)
 
 # Edit MenuItem
 @app.route('/restaurant/<int:restaurant_id>/menu/<int:menu_id>/edit', methods=['GET', 'POST'])
@@ -378,7 +396,8 @@ def editMenuItem(restaurant_id, menu_id):
         flash('Menu Item Successfully Edited')
         return redirect(url_for('showMenu', restaurant_id=restaurant_id))
     else:
-        return render_template('editmenuitem.html', restaurant_id=restaurant_id, menu_id=menu_id, item=editedItem)
+        user = session.query(User).filter_by(name = login_session['username']).one()
+        return render_template('editmenuitem.html', restaurant_id=restaurant_id, menu_id=menu_id, item=editedItem,user = user)
 
 
 # Delete a menu item
@@ -396,15 +415,9 @@ def deleteMenuItem(restaurant_id, menu_id):
         flash('Menu Item Successfully Deleted')
         return redirect(url_for('showMenu', restaurant_id=restaurant_id))
     else:
-        return render_template('deletemenuitem.html', item=itemToDelete)
+        user = session.query(User).filter_by(name = login_session['username']).one()
+        return render_template('deletemenuitem.html', item=itemToDelete , user=user)
         return render_template('deleteconfirmation.html', item=itemToDelete)
-
-@app.route('/restaurants/<int:restaurant_id>/menu/<int:menu_id>/JSON/')
-def restaurantMenuItemJSON(restaurant_id,menu_id):
-    
-    item = session.query(MenuItem).filter_by(
-        id=menu_id).one()
-    return jsonify(MenuItem=item.serialize)
 
 if __name__ == '__main__':
     app.secret_key = 's!e@c#r$e%t'

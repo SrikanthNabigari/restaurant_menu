@@ -1,20 +1,22 @@
 {% extends "main.html"%}
 {% block signin %}
     <div class="signin_user">
-        <a href="#">
+        <a href="{{url_for('showLogin')}}">
             <button class="btn btn-default">
                 <span class="glyphicon glyphicon-user" aria-hidden="true"></span>SignIn
             </button>
         </a>
     </div>        
     {% endblock %}
-{% block content %}
+
 
 {% block pagetitle %}
             <h1>    
                 Restaurants
             </h1>
-{% endblock %} 
+{% endblock %}     
+{% block content %}
+
 <section class="restaurant_list">
     
     <div class="row">

@@ -1,30 +1,24 @@
-###### Configuration ########
-import sys
-
-from sqlalchemy import Column,ForeignKey,Integer,String
-
+from sqlalchemy import Column, ForeignKey, Integer, String
 from sqlalchemy.ext.declarative import declarative_base
-
 from sqlalchemy.orm import relationship
-
 from sqlalchemy import create_engine
-
+ 
 Base = declarative_base()
 
-########## classes ############
 class User(Base):
-    ''' User database table stores name , email,and picture '''
+    ''' Creates the user database table with username,email and picture '''
     __tablename__ = 'user'
     id = Column(Integer, primary_key=True)
     name = Column(String(250), nullable=False)
     email = Column(String(250), nullable=False)
     picture = Column(String(250))
 
-class Restaurant(Base) :
-    ''' Restaurant table contains the names of the restaurants '''
-    __tablename__ = 'restaurant' 
-    name = Column(String(80), nullable = False)
-    id = Column(Integer, primary_key = True)
+class Restaurant(Base):
+    ''' Creates restaurnat table with names '''
+    __tablename__ = 'restaurant'
+   
+    id = Column(Integer, primary_key=True)
+    name = Column(String(250), nullable=False)
     user_id = Column(Integer, ForeignKey('user.id'))
     user = relationship(User)
 
@@ -35,34 +29,34 @@ class Restaurant(Base) :
            'name'         : self.name,
            'id'           : self.id,
        }
+ 
+class MenuItem(Base):
+    ''' Creates the menu items table for each restaurant'''
+    __tablename__ = 'menu_item'
 
-class MenuItem(Base) :
-    ''' This class table contains the menu items of the restaurant '''
-    __tablename__ = 'menu_item'    
-    name = Column(String(80), nullable = False)
+    name =Column(String(80), nullable = False)
     id = Column(Integer, primary_key = True)
-    course = Column(String(250))
     description = Column(String(250))
     price = Column(String(8))
-    restaurant_id = Column(Integer, ForeignKey('restaurant.id'))
+    course = Column(String(250))
+    restaurant_id = Column(Integer,ForeignKey('restaurant.id'))
     restaurant = relationship(Restaurant)
     user_id = Column(Integer, ForeignKey('user.id'))
     user = relationship(User)
-    # We added this serialize function to be able to send JSON objects in a
-    # serializable format
+
     @property
     def serialize(self):
-        return {
-                'name': self.name,
-                'description': self.description,
-                'id': self.id,
-                'price': self.price,
-                'course': self.course,
-            }    
+       """Return object data in easily serializeable format"""
+       return {
+           'name'         : self.name,
+           'description'         : self.description,
+           'id'         : self.id,
+           'price'         : self.price,
+           'course'         : self.course,
+       }
 
-####### insert at end of file ###########
 
-engine = create_engine(
-    'sqlite:///restaurantmenu.db' )
+engine = create_engine('sqlite:///restaurantmenuwithusers.db')
 
-Base.metadata.create_all(engine)        
+
+Base.metadata.create_all(engine)

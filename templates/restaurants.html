@@ -1,13 +1,17 @@
 {% extends "main.html"%}
 {% block signin %}
     <div class="logout_user">
-        <a href="#">
+        <a href="{{url_for('gdisconnect')}}">
             <button class="btn btn-default">
                 <span class="glyphicon glyphicon-user" aria-hidden="true"></span>Logout
             </button>
         </a>
     </div>        
     {% endblock %}
+{% block user %}
+    <img src="{{user.picture}}" class="img-responsive img-circle" alt="{{user.name}}">
+    <h3>{{user.name}}</h3>
+{% endblock %}
 {% block options %}
     <div class="add_restaurant">
         <a href="{{url_for('newRestaurant')}}">
