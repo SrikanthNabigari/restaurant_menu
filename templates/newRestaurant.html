@@ -1,0 +1,21 @@
+{% extends "main.html" %}
+
+{% block pagetitle%}
+        <h1>
+            New Restaurant
+        </h1>
+{% endblock %}
+{% block content %}
+
+<section class="new_restaurant">
+    <div class="row">
+        <div class="col-md-6">
+            <form action="{{url_for('newRestaurant')}}">
+                <label for="name">Name:</label>
+                <input type="text" class="form-control" maxlength="100" name="name">
+                <button type="submit" class="btn btn-default">Create</button>
+            </form>
+        </div>
+    </div>
+</section>
+{% endblock %}

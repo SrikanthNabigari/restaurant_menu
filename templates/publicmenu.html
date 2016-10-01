@@ -1,0 +1,38 @@
+{% extends "main.html"%}
+    {% block signin %}
+        <div class="signin_user">
+            <a href="#">
+                <button class="btn btn-default">
+                    <span class="glyphicon glyphicon-user" aria-hidden="true"></span>SignIn
+                </button>
+            </a>
+        </div>        
+     {% endblock %}   
+     {% block pagetitle%}
+        <h1>
+            {{restaurant.name}} Restaurant
+        </h1>
+{% endblock %}
+<section class="menu_items">
+    <div class="row">
+        {% for i in items %}
+            <div class="col-md-12">
+                <h3 class="menu_name">{{i.name}}</h3>
+                <p class="menu_description">{{i.description}}</p>
+                <p class="menu_price"> {{i.price}} </p>
+        
+                <div class="dropdown">
+                    <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                        <span class="glyphicon glyphicon-chevron-down"></span>
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                        <li><a href='{{url_for('editMenuItem', restaurant_id = restaurant.id, menu_id = i.id) }}'>Edit</a></li>
+                        <li><a href = '{{url_for('deleteMenuItem', restaurant_id = restaurant.id, menu_id = i.id ) }}'>Delete</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+        {% endfor %}
+    </div>
+</section>
+{% endblock %}
