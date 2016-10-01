@@ -17,19 +17,19 @@ $python lotsofmenus.py
 
  ```bash
  $python project.py 
+ 
+=============================
 
- ```
- ------------------------------------------------
+ # API's on
 
- #API's on
- ```
- /restaurants/JSON
+/restaurants/JSON
 
- ```
- /restaurant/restaurant_id/menu/JSON
+```
+```
+/restaurant/<restaurant_id>/menu/JSON
 
- ```
- ```
- /restaurant/restaurant_id/menu/menu_id/JSON
- ```
+```
+```
+/restaurant/<restaurantid>/menu/<menuid>/JSON
+```
 
