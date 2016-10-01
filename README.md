@@ -19,3 +19,17 @@ $python lotsofmenus.py
  $python project.py 
 
  ```
+ ------------------------------------------------
+
+ #API's on
+ ```
+ /restaurants/JSON
+
+ ```
+ /restaurant/restaurant_id/menu/JSON
+
+ ```
+ ```
+ /restaurant/restaurant_id/menu/menu_id/JSON
+ ```
+
