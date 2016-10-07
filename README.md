@@ -23,7 +23,7 @@ $python database_setup.py
 ```
 ```bash
 $python lotsofmenus.py
-```s
+```
 ```bash
 $python project.py
 ```
