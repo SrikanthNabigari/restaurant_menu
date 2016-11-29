@@ -39,7 +39,7 @@ $python database_setup.py
 $python lotsofmenus.py
 ```
 ```bash
-$python project.py
+$python __init__.py
 ```
 
 Now open http://localhost:5000 in your browser.
