@@ -24,7 +24,7 @@ APPLICATION_NAME = "Restaurant Menu Application"
 
 
 # Connect to Database and create database session
-engine = create_engine('sqlite:///restaurantmenuwithusers.db')
+engine = create_engine('posgresql+psycopg2://catalog:catalogdb@localhost/restaurantmenuwithusers')
 Base.metadata.bind = engine
 
 DBSession = sessionmaker(bind=engine)

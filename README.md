@@ -18,6 +18,20 @@ $vagrant ssh
 
 
 ## To initialze the project run the following commands
+
+Create user catalog for Posgresql db
+
+```
+sudo su - postgresql
+```
+
+```
+psql
+CREATE USER catalog WITH PASSWORD 'xxx';
+CREATE DATABASE restaurantmenuwithusers;
+\q 
+```
+
 ```bash
 $python database_setup.py 
 ```
@@ -28,6 +42,6 @@ $python lotsofmenus.py
 $python project.py
 ```
 
-Now open https://localhost:5000 in your browser.
+Now open http://localhost:5000 in your browser.
 
 
